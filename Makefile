@@ -4,6 +4,9 @@ run:
 install:
 	npm link
 
+build:
+	npm run build
+
 test:
 	npm test
 
