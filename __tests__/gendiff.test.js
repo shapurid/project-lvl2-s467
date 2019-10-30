@@ -12,3 +12,7 @@ test('yml test', () => {
   const received = genDiff('./__tests__/__fixtures__/before.yml', './__tests__/__fixtures__/after.yml');
   expect(received).toBe(result);
 });
+test('ini test', () => {
+  const received = genDiff('./__tests__/__fixtures__/before.ini', './__tests__/__fixtures__/after.ini');
+  expect(received).toBe(result);
+});
