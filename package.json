@@ -1,6 +1,6 @@
 {
   "name": "gendiff-shapurid",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
