@@ -9,7 +9,10 @@ build:
 
 test:
 	npm test
-
+	
+fix:
+	./node_modules/.bin/eslint --fix --ignore-path .gitignore .
+	
 lint:
 	npm run eslint .
 

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import { has } from 'lodash';
+import formatter from './formatters';
 import parseData from './parsers';
 
 const propertyActions = [
@@ -11,15 +12,15 @@ const propertyActions = [
     process: (key, before, after, fn) => ({ status: 'notChanged', key, children: fn(before[key], after[key]) }),
   },
   {
-    check: (key, before) => !_.has(before, key),
+    check: (key, before) => !has(before, key),
     process: (key, before, after) => ({ status: 'added', key, value: after[key] }),
   },
   {
-    check: (key, before, after) => !_.has(after, key),
+    check: (key, before, after) => !has(after, key),
     process: (key, before) => ({ status: 'deleted', key, value: before[key] }),
   },
   {
-    check: (key, before, after) => _.has(before, key) && _.has(after, key)
+    check: (key, before, after) => has(before, key) && has(after, key)
 && before[key] !== after[key],
     process: (key, before, after) => ({
       status: 'changed', key, valueOld: before[key], valueNew: after[key],
@@ -27,44 +28,16 @@ const propertyActions = [
   },
 ];
 
-const getPropertyActions = (...arg) => _.find(propertyActions, ({ check }) => check(...arg));
+const getPropertyActions = (...arg) => propertyActions.find(({ check }) => check(...arg));
 
 const buildAst = (before, after) => Object.keys({ ...before, ...after }).map((el) => {
   const { process } = getPropertyActions(el, before, after);
   return process(el, before, after, buildAst);
 });
 
-const indent = (n) => ' '.repeat(n * 2);
-
-const stringify = (obj, depth) => {
-  if (obj instanceof Object) {
-    const objToString = Object.keys(obj).reduce((acc, key) => [...acc, `  ${key}: ${obj[key]}`], []).join('\n');
-    return `{\n${indent(depth + 2)}${objToString}\n${indent(depth)}  }`;
-  }
-  return obj;
-};
-
-const nodeHandlers = {
-  added: ({ key, value }, depth) => `${indent(depth)}+ ${key}: ${stringify(value, depth)}`,
-  deleted: ({ key, value }, depth) => `${indent(depth)}- ${key}: ${stringify(value, depth)}`,
-  changed: ({ key, valueOld, valueNew }, depth) => [`${indent(depth)}- ${key}: ${stringify(valueOld, depth)}`, `${indent(depth)}+ ${key}: ${stringify(valueNew, depth)}`],
-  notChanged: ({ key, value, children }, depth, f) => (children ? `${indent(depth)}  ${key}: {\n${f(children, depth + 2)}\n${indent(depth + 1)}}` : `${indent(depth)}  ${key}: ${stringify(value, depth)}`),
-};
-
-const constructDiff = (ast, depth = 1) => {
-  const astToArr = ast.reduce(
-    (acc, node) => [...acc, nodeHandlers[node.status](node, depth, constructDiff)], [],
-  );
-  return _.flatten(astToArr).join('\n');
-};
-
-const render = (ast) => `{\n${constructDiff(ast)}\n}\n`;
-
-
-const genDiff = (data1, data2) => {
+export default (data1, data2, format) => {
   const dataObj1 = parseData(data1);
   const dataObj2 = parseData(data2);
   const ast = buildAst(dataObj1, dataObj2);
-  return render(ast);
+  return formatter[format](ast);
 };
-export default genDiff;
