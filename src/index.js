@@ -11,10 +11,6 @@ const propertyActions = [
     process: (key, before, after, fn) => ({ status: 'notChanged', key, children: fn(before[key], after[key]) }),
   },
   {
-    check: (key, before, after) => !_.has(after, key),
-    process: (key, before) => ({ status: 'deleted', key, value: before[key] }),
-  },
-  {
     check: (key, before) => !_.has(before, key),
     process: (key, before, after) => ({ status: 'added', key, value: after[key] }),
   },
