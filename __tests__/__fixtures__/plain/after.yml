@@ -1,0 +1,17 @@
+---
+timeout: 20
+common:
+  setting1: Value 1
+  setting2: "200"
+  setting3: true
+  sites: hexlet.io
+  setting6:
+    key: value
+    ops: vops
+verbose: true
+group1:
+  baz: bas
+  foo: bar
+  nest: str
+group2:
+  abc: "12345"

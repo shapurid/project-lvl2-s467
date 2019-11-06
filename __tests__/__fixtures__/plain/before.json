@@ -1,0 +1,25 @@
+{
+  "timeout": 50,
+  "proxy": "123.234.53.22",
+  "common": {
+    "setting1": "Value 1",
+    "setting3": true,
+    "setting4": "blah blah",
+    "setting5": {
+      "key5": "value5"
+    },
+    "setting6": {
+      "key": "value"
+    }
+  },
+
+  "group1": {
+    "foo": "bar",
+    "baz": "bars",
+    "nest": "str"
+  },
+
+  "group3": {
+    "fee": "100500"
+  }
+}
