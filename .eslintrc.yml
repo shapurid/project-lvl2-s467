@@ -16,4 +16,5 @@ parserOptions:
   ecmaVersion: 2018
   sourceType: module
 rules: 
+  jest/valid-describe: off
   no-console: off
