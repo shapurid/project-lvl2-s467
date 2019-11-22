@@ -23,4 +23,4 @@ const constructPlain = (ast, path) => {
   return flatten(astToArr).join('\n');
 };
 
-export default (ast) => `${constructPlain(ast)}\n`;
+export default (ast) => `${constructPlain(ast)}`;

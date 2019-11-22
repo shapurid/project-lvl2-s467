@@ -24,4 +24,4 @@ const constructDiff = (ast, depth = 1) => {
   return flatten(astToArr).join('\n');
 };
 
-export default (ast) => `{\n${constructDiff(ast)}\n}\n`;
+export default (ast) => `{\n${constructDiff(ast)}\n}`;

@@ -11,10 +11,10 @@ test:
 	npm test
 	
 fix:
-	./node_modules/.bin/eslint --fix --ignore-path .gitignore .
+	npx eslint . --fix
 	
 lint:
-	npm run eslint .
+	npx eslint .
 
 publish:
 	npm publish --dry-run
