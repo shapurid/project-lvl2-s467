@@ -12,14 +12,14 @@ const parsers = {
 
 const extractFormat = (pathToFile) => path.extname(pathToFile);
 
-const extractFile = (pathToFile) => fs.readFileSync(pathToFile, 'utf8');
+const extractContent = (pathToFile) => fs.readFileSync(pathToFile, 'utf8');
 
 const chooseParser = (format) => parsers[format];
 
-export default (data) => {
-  const formatOfFile = extractFormat(data);
-  const file = extractFile(data);
+export default (filePath) => {
+  const formatOfFile = extractFormat(filePath);
+  const content = extractContent(filePath);
   const parse = chooseParser(formatOfFile);
 
-  return parse(file);
+  return parse(content);
 };

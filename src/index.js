@@ -1,6 +1,6 @@
-import { has } from 'lodash';
+import _ from 'lodash';
 import formatter from './formatters';
-import parseData from './parsers';
+import parseContent from './parsers';
 
 const propertyActions = [
   {
@@ -12,15 +12,15 @@ const propertyActions = [
     process: (key, before, after, fn) => ({ status: 'notChanged', key, children: fn(before[key], after[key]) }),
   },
   {
-    check: (key, before) => !has(before, key),
+    check: (key, before) => !_.has(before, key),
     process: (key, before, after) => ({ status: 'added', key, value: after[key] }),
   },
   {
-    check: (key, before, after) => !has(after, key),
+    check: (key, before, after) => !_.has(after, key),
     process: (key, before) => ({ status: 'deleted', key, value: before[key] }),
   },
   {
-    check: (key, before, after) => has(before, key) && has(after, key)
+    check: (key, before, after) => _.has(before, key) && _.has(after, key)
 && before[key] !== after[key],
     process: (key, before, after) => ({
       status: 'changed', key, valueOld: before[key], valueNew: after[key],
@@ -30,14 +30,17 @@ const propertyActions = [
 
 const getPropertyActions = (...arg) => propertyActions.find(({ check }) => check(...arg));
 
-const buildAst = (before, after) => Object.keys({ ...before, ...after }).map((el) => {
-  const { process } = getPropertyActions(el, before, after);
-  return process(el, before, after, buildAst);
-});
+const buildAst = (before, after) => {
+  const keys = _.union(_.keys(before), _.keys(after));
+  return keys.map((key) => {
+    const { process } = getPropertyActions(key, before, after);
+    return process(key, before, after, buildAst);
+  });
+};
 
-export default (data1, data2, format) => {
-  const dataObj1 = parseData(data1);
-  const dataObj2 = parseData(data2);
-  const ast = buildAst(dataObj1, dataObj2);
+export default (filePath1, filePath2, format) => {
+  const contentOfFile1 = parseContent(filePath1);
+  const contentOfFile2 = parseContent(filePath2);
+  const ast = buildAst(contentOfFile1, contentOfFile2);
   return formatter[format](ast);
 };
