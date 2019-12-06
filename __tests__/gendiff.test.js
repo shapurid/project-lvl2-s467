@@ -1,16 +1,24 @@
 import fs from 'fs';
 import genDiff from '../src';
 
-const formats = ['json', 'yml', 'ini'];
-const typesOfTest = ['flatDiff', 'complexDiff', 'plain', 'json'];
-const getFixturePath = (dirPath, name = 'result.txt') => `./__tests__/__fixtures__/${dirPath}/${name}`;
-
-describe.each(typesOfTest)('%s', (type) => {
-  const expected = fs.readFileSync(getFixturePath(type), 'utf8').trim();
-  test.each(formats)('%s', (format) => {
-    const beforePath = getFixturePath(type, `before.${format}`);
-    const afterPath = getFixturePath(type, `after.${format}`);
-    const actual = genDiff(beforePath, afterPath, type === 'complexDiff' || type === 'flatDiff' ? 'diff' : type);
-    expect(actual).toBe(expected);
-  });
+test.each`
+  dirPath          | outputFormat | formatOfFile
+  ${'flatDiff'}    | ${'diff'}    | ${'.json'}
+  ${'flatDiff'}    | ${'diff'}    | ${'.yml'}
+  ${'flatDiff'}    | ${'diff'}    | ${'.ini'}
+  ${'complexDiff'} | ${'diff'}    | ${'.json'}
+  ${'complexDiff'} | ${'diff'}    | ${'.yml'}
+  ${'complexDiff'} | ${'diff'}    | ${'.ini'}
+  ${'plain'}       | ${'plain'}   | ${'.json'}
+  ${'plain'}       | ${'plain'}   | ${'.yml'}
+  ${'plain'}       | ${'plain'}   | ${'.ini'}
+  ${'json'}        | ${'json'}    | ${'.json'}
+  ${'json'}        | ${'json'}    | ${'.yml'}
+  ${'json'}        | ${'json'}    | ${'.ini'}
+`("Checking the construction of '$dirPath' difference between two files with '$formatOfFile' extension", ({ dirPath, outputFormat, formatOfFile }) => {
+  const beforeFilePath = `./__tests__/__fixtures__/${dirPath}/before${formatOfFile}`;
+  const afterFilePath = `./__tests__/__fixtures__/${dirPath}/after${formatOfFile}`;
+  const expected = fs.readFileSync(`./__tests__/__fixtures__/${dirPath}/result.txt`, 'utf8').trim();
+  const actual = genDiff(beforeFilePath, afterFilePath, outputFormat);
+  expect(actual).toBe(expected);
 });

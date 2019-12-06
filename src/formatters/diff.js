@@ -15,12 +15,8 @@ const nodeHandlers = {
   added: (depth, { key, value }) => `${indent(depth)}+ ${key}: ${stringify(value, depth)}`,
   changed: (depth, { key, valueOld, valueNew }) => [`${indent(depth)}- ${key}: ${stringify(valueOld, depth)}`, `${indent(depth)}+ ${key}: ${stringify(valueNew, depth)}`],
   deleted: (depth, { key, value }) => `${indent(depth)}- ${key}: ${stringify(value, depth)}`,
-  notChanged: (depth, { key, value, children }, f) => {
-    if (_.isUndefined(children)) {
-      return `${indent(depth)}  ${key}: ${stringify(value, depth)}`;
-    }
-    return `${indent(depth)}  ${key}: {\n${f(children, depth + 2)}\n${indent(depth + 1)}}`;
-  },
+  unchanged: (depth, { key, value }) => `${indent(depth)}  ${key}: ${stringify(value, depth)}`,
+  nested: (depth, { key, children }, f) => `${indent(depth)}  ${key}: {\n${f(children, depth + 2)}\n${indent(depth + 1)}}`,
 };
 
 const constructDiff = (ast, depth = 1) => {

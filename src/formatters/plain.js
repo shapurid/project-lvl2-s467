@@ -13,7 +13,8 @@ const nodeHandlers = {
   added: (keyWithPath, { value }) => `Property '${keyWithPath}' was added with value: ${stringify(value)}`,
   deleted: (keyWithPath) => `Property '${keyWithPath}' was removed`,
   changed: (keyWithPath, { valueOld, valueNew }) => `Property '${keyWithPath}' was updated. From ${stringify(valueOld)} to ${stringify(valueNew)}`,
-  notChanged: (keyWithPath, { children }, f) => (_.isUndefined(children) ? [] : `${f(children, keyWithPath)}`),
+  unchanged: () => [],
+  nested: (keyWithPath, { children }, f) => `${f(children, keyWithPath)}`,
 };
 
 const constructPlain = (ast, path) => {
