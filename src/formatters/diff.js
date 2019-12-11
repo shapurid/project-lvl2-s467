@@ -7,7 +7,7 @@ const stringify = (obj, depth) => {
     return obj;
   }
   const keys = _.keys(obj);
-  const objToString = keys.reduce((acc, key) => [...acc, `  ${key}: ${obj[key]}`], []).join('\n');
+  const objToString = keys.map((key) => `  ${key}: ${obj[key]}`);
   return `{\n${indent(depth + 2)}${objToString}\n${indent(depth)}  }`;
 };
 
@@ -20,11 +20,11 @@ const nodeHandlers = {
 };
 
 const constructDiff = (ast, depth = 1) => {
-  const astToArr = ast.map((node) => {
+  const elementsOfDiff = ast.map((node) => {
     const choosenHandler = nodeHandlers[node.status];
     return choosenHandler(depth, node, constructDiff);
   });
-  return _.flatten(astToArr).join('\n');
+  return _.flatten(elementsOfDiff).join('\n');
 };
 
 export default (ast) => `{\n${constructDiff(ast)}\n}`;

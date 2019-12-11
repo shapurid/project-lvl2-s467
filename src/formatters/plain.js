@@ -18,12 +18,12 @@ const nodeHandlers = {
 };
 
 const constructPlain = (ast, path) => {
-  const astToArr = ast.map((node) => {
+  const elementsOfPlain = ast.map((node) => {
     const formedPathOfProperty = path ? `${path}.${node.key}` : node.key;
     const choosenHandler = nodeHandlers[node.status];
     return choosenHandler(formedPathOfProperty, node, constructPlain);
   });
-  return _.flatten(astToArr).join('\n');
+  return _.flatten(elementsOfPlain).join('\n');
 };
 
-export default (ast) => `${constructPlain(ast)}`;
+export default (ast) => constructPlain(ast);

@@ -16,9 +16,9 @@ test.each`
   ${'json'}        | ${'json'}    | ${'.yml'}
   ${'json'}        | ${'json'}    | ${'.ini'}
 `("Checking the construction of '$dirPath' difference between two files with '$formatOfFile' extension", ({ dirPath, outputFormat, formatOfFile }) => {
-  const beforeFilePath = `./__tests__/__fixtures__/${dirPath}/before${formatOfFile}`;
-  const afterFilePath = `./__tests__/__fixtures__/${dirPath}/after${formatOfFile}`;
-  const expected = fs.readFileSync(`./__tests__/__fixtures__/${dirPath}/result.txt`, 'utf8').trim();
+  const beforeFilePath = `${__dirname}/__fixtures__/${dirPath}/before${formatOfFile}`;
+  const afterFilePath = `${__dirname}/__fixtures__/${dirPath}/after${formatOfFile}`;
+  const expected = fs.readFileSync(`${__dirname}/__fixtures__/${dirPath}/result.txt`, 'utf8').trim();
   const actual = genDiff(beforeFilePath, afterFilePath, outputFormat);
   expect(actual).toBe(expected);
 });

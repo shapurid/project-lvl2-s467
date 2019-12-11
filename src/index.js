@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
-import formatter from './formatters';
+import render from './formatters';
 import parse from './parsers';
 
 const propertyActions = [
@@ -40,13 +40,16 @@ const buildAst = (before, after) => {
   });
 };
 
-export default (filePath1, filePath2, format) => {
-  const contentOfFile1 = fs.readFileSync(filePath1, 'utf-8');
-  const contentOfFile2 = fs.readFileSync(filePath2, 'utf-8');
-  const fileExtension1 = path.extname(filePath1);
-  const fileExtension2 = path.extname(filePath2);
-  const dataObj1 = parse(contentOfFile1, fileExtension1);
-  const dataObj2 = parse(contentOfFile2, fileExtension2);
-  const ast = buildAst(dataObj1, dataObj2);
-  return formatter(ast, format);
+const getData = (config) => {
+  const filePath = path.resolve(config);
+  const contentOfFile = fs.readFileSync(filePath, 'utf-8');
+  const type = path.extname(filePath).slice(1);
+  return parse(contentOfFile, type);
+};
+
+export default (config1, config2, format) => {
+  const data1 = getData(config1);
+  const data2 = getData(config2);
+  const ast = buildAst(data1, data2);
+  return render(ast, format);
 };
