@@ -1,11 +1,10 @@
 import renderDiff from './diff';
 import renderPlain from './plain';
-import renderJSON from './toJson';
 
 const formatters = {
   diff: renderDiff,
   plain: renderPlain,
-  json: renderJSON,
+  json: JSON.stringify,
 };
 
 export default (ast, format) => formatters[format](ast);

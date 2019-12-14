@@ -21,8 +21,8 @@ const nodeHandlers = {
 
 const constructDiff = (ast, depth = 1) => {
   const elementsOfDiff = ast.map((node) => {
-    const choosenHandler = nodeHandlers[node.status];
-    return choosenHandler(depth, node, constructDiff);
+    const selectHandler = nodeHandlers[node.status];
+    return selectHandler(depth, node, constructDiff);
   });
   return _.flatten(elementsOfDiff).join('\n');
 };
